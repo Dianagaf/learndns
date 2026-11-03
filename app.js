@@ -1,5 +1,13 @@
 (()=>{'use strict';
-const data=window.LEARNDNS;if(!data||!Array.isArray(data.articles)||!Array.isArray(data.categories)){console.error('LearnDNS: no se pudo cargar content.js');return;}
+let lang=localStorage.getItem('learndns-language')||'es';
+if(!['es','en'].includes(lang))lang='es';
+
+let data=lang==='en'?window.LEARNDNS_EN:window.LEARNDNS;
+
+if(!data||!Array.isArray(data.articles)||!Array.isArray(data.categories)){
+  console.error('LearnDNS: no se pudo cargar el contenido del idioma seleccionado.');
+  return;
+}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const home=$('#homeView'),searchView=$('#searchView'),articleView=$('#articleView'),input=$('#searchInput'),clear=$('#clearSearch'),searchBox=$('#searchBox'),sidebar=$('#sidebar'),menuBtn=$('#menuBtn');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
