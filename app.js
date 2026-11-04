@@ -737,19 +737,17 @@ function applyLanguage(nextLang){
   const currentHash=location.hash;
   const currentSearch=input.value;
 
-  lang=nextLang;
-  data=newData;
-  applyStaticTranslations();
+ lang=nextLang;
+data=newData;
 
-  localStorage.setItem('learndns-language',lang);
+localStorage.setItem('learndns-language',lang);
 
+const selector=$('#languageSwitch');
+if(selector)selector.value=lang;
 
-  const selector=$('#languageSwitch');
-  if(selector)selector.value=lang;
-
-  applyStaticTranslations();
-  renderNav();
-  renderHome();
+applyStaticTranslations();
+renderNav();
+renderHome();
 
   if(currentHash==='#buscar'&&currentSearch){
     search(currentSearch);
@@ -820,6 +818,8 @@ function route(){
 
   setView('home');
 }
+  
+applyStaticTranslations();
 
 renderNav();
 renderHome();
