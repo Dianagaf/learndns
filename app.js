@@ -48,7 +48,34 @@ const ui={
     selectArticle:'Selecciona un artículo',
     practice:'PRÁCTICA',
     home:'INICIO',
-    language:'Idioma'
+    language:'Idioma',
+    homeIndex:'Inicio / índice',
+heroTitle:'Entiende cómo funciona',
+heroDescription:'Una biblioteca técnica para consultar cómo los dominios se convierten en direcciones IP, cómo se organizan las zonas y cómo los servidores encuentran la información que necesitamos.',
+exploreDocumentation:'Explorar documentación',
+technicalAreas:'áreas técnicas',
+freeConsultation:'Consulta libre · Sin recorrido obligatorio',
+root:'Raíz',
+hierarchy:'RAÍZ → TLD → DOMINIO',
+libraryEyebrow:'BIBLIOTECA DE CONSULTA',
+exploreDNS:'Explora el DNS',
+topicsDescription:'Encuentra el tema que necesitas y consulta cómo funciona, con ejemplos y referencias técnicas.',
+areasDocumentation:'ÁREAS · DOCUMENTACIÓN TÉCNICA',
+directAccess:'ACCESO DIRECTO',
+essentialReferences:'Referencias esenciales',
+quickDescription:'Atajos a recursos de consulta frecuente.',
+recordTypes:'Tipos de registros',
+toolsCommands:'Comandos y herramientas',
+globalSearch:'BIBLIOTECA / BÚSQUEDA GLOBAL',
+searchResults:'RESULTADOS',
+searchTitle:'Buscar en LearnDNS',
+pageToc:'EN ESTA PÁGINA',
+quickConsultation:'CONSULTA RÁPIDA',
+allAreas:'Todas las áreas',
+footerDescription:'Documentación técnica para comprender el Sistema de Nombres de Dominio.',
+topics:'Temas',
+technicalLibrary:'DOCUMENTACIÓN TÉCNICA',
+footerLibrary:'Biblioteca técnica de consulta'
   },
   en:{
     articles:'articles',
@@ -77,12 +104,149 @@ const ui={
     selectArticle:'Select an article',
     practice:'PRACTICE',
     home:'HOME',
-    language:'Language'
+    language:'Language',
+    homeIndex:'Home / index',
+heroTitle:'Understand how the Internet works.',
+heroDescription:'A technical library to explore how domains become IP addresses, how zones are organized, and how servers find the information we need.',
+exploreDocumentation:'Explore documentation',
+technicalAreas:'technical areas',
+freeConsultation:'Open reference · No required learning path',
+root:'Root',
+hierarchy:'ROOT → TLD → DOMAIN',
+libraryEyebrow:'REFERENCE LIBRARY',
+exploreDNS:'Explore DNS',
+topicsDescription:'Find the topic you need and learn how it works through examples and technical references.',
+areasDocumentation:'AREAS · TECHNICAL DOCUMENTATION',
+directAccess:'QUICK ACCESS',
+essentialReferences:'Essential references',
+quickDescription:'Shortcuts to frequently used reference resources.',
+recordTypes:'Record types',
+toolsCommands:'Commands and tools',
+globalSearch:'LIBRARY / GLOBAL SEARCH',
+searchResults:'RESULTS',
+searchTitle:'Search LearnDNS',
+pageToc:'ON THIS PAGE',
+quickConsultation:'QUICK REFERENCE',
+allAreas:'All areas',
+footerDescription:'Technical documentation to understand the Domain Name System.',
+topics:'Topics',
+technicalLibrary:'TECHNICAL DOCUMENTATION',
+footerLibrary:'Technical reference library'
   }
 };
 
 const t=key=>ui[lang][key]||key;
+function applyStaticTranslations(){
+  const set=(selector,value)=>{
+    const el=$(selector);
+    if(el&&value!==undefined)el.textContent=value;
+  };
 
+  const attr=(selector,name,value)=>{
+    const el=$(selector);
+    if(el&&value!==undefined)el.setAttribute(name,value);
+  };
+
+  attr('#menuBtn','aria-label',t('openNavigation'));
+  attr('.brand','aria-label','LearnDNS, '+t('homeIndex'));
+  attr('#searchInput','aria-label',t('searchPlaceholder'));
+  attr('#clearSearch','aria-label',lang==='en'?'Clear search':'Limpiar búsqueda');
+  attr('#sidebar','aria-label',t('library'));
+  attr('#sideNav','aria-label',lang==='en'?'Documentation sections':'Secciones de documentación');
+  attr('.viz','aria-label',lang==='en'?'DNS hierarchy from root to domain':'Jerarquía DNS desde la raíz hasta un dominio');
+
+  const sideHead=$('.side-head');
+  if(sideHead)sideHead.firstChild.textContent=t('library')+' ';
+
+  const sideHome=$('.side-home');
+  if(sideHome)sideHome.innerHTML=`<span class="home-glyph">⌂</span> ${t('homeIndex')}`;
+
+  set('.side-foot',t('technicalLibrary'));
+  const sideFoot=$('.side-foot');
+  if(sideFoot)sideFoot.innerHTML=`${t('technicalLibrary')}<br><span>DNS · RFC · ${lang==='en'?'OPERATIONS':'OPERACIÓN'}</span>`;
+
+  set('.hero .tag','DOMAIN NAME SYSTEM / DNS');
+
+  const heroTitle=$('.hero h1');
+  if(heroTitle)heroTitle.innerHTML=lang==='en'
+    ?'Understand how the <span>Internet works.</span>'
+    :'Entiende cómo funciona <span>Internet.</span>';
+
+  set('.hero-copy > p',t('heroDescription'));
+
+  const heroButton=$('.hero-copy .button');
+  if(heroButton)heroButton.innerHTML=`${t('exploreDocumentation')} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+
+  const meta=$$('.hero-meta span');
+  if(meta.length){
+    meta[0].innerHTML=`<i></i> ${data.categories.length} ${t('technicalAreas')}`;
+    if(meta[1])meta[1].textContent=t('freeConsultation');
+  }
+
+  const vizBar=$('.viz-bar span');
+  if(vizBar)vizBar.textContent=lang==='en'?'DNS hierarchy':'jerarquía DNS';
+
+  const cap=$('.viz .cap');
+  if(cap)cap.textContent=t('root');
+
+  const vizCaption=$('.viz-caption');
+  if(vizCaption)vizCaption.innerHTML=`<span>01</span> ${t('hierarchy').replaceAll('→','<b>→</b>')}`;
+
+  set('.topics .eyebrow',t('libraryEyebrow'));
+  set('.topics h2',t('exploreDNS'));
+  set('.topics .section-head p',t('topicsDescription'));
+  set('.path-note',`${data.categories.length} ${t('areasDocumentation')}`);
+
+  const quick=$$('.quick-links .section-head .eyebrow');
+  if(quick.length)quick[0].textContent=t('directAccess');
+
+  set('.quick-links h2',t('essentialReferences'));
+  set('.quick-links .section-head p',t('quickDescription'));
+
+  const links=$$('.quick-grid a');
+  if(links.length){
+    links[0].innerHTML=`${t('glossary')} <span>↗</span>`;
+    links[1].innerHTML=`${t('recordTypes')} <span>↗</span>`;
+    links[2].innerHTML=`${t('toolsCommands')} <span>↗</span>`;
+  }
+
+  set('#searchView .crumb',t('globalSearch'));
+  set('#searchView .eyebrow',t('searchResults'));
+  set('#searchView h1',t('searchTitle'));
+
+  set('.toc-title',t('pageToc'));
+  const related=$('.toc-related .eyebrow');
+  if(related)related.textContent=t('quickConsultation');
+
+  const tocLinks=$$('.toc-related a');
+  if(tocLinks.length){
+    tocLinks[0].innerHTML=`${t('glossary')} <b>→</b>`;
+    tocLinks[1].innerHTML=`${lang==='en'?'DNS tools':'Herramientas DNS'} <b>→</b>`;
+    tocLinks[2].innerHTML=`${t('allAreas')} <b>→</b>`;
+  }
+
+  set('.footer-brand p',t('footerDescription'));
+
+  const footerLinks=$$('.foot-links a');
+  if(footerLinks.length){
+    footerLinks[0].textContent=t('home');
+    footerLinks[1].textContent=t('topics');
+    footerLinks[2].textContent=t('glossary');
+  }
+
+  const copy=$('.copy');
+  if(copy)copy.innerHTML=`learndns.lat <span>·</span> ${t('footerLibrary')}`;
+
+  document.documentElement.lang=lang;
+  document.title=lang==='en'
+    ?'LearnDNS · DNS Technical Documentation'
+    :'LearnDNS · Documentación técnica de DNS';
+
+  const description=$('meta[name="description"]');
+  if(description)description.content=lang==='en'
+    ?'LearnDNS: technical library for understanding domains, zones, records, servers, DNS resolution and security.'
+    :'LearnDNS: biblioteca técnica para comprender dominios, zonas, registros, servidores, resolución y seguridad DNS.';
+}
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
@@ -467,18 +631,15 @@ function applyLanguage(nextLang){
 
   lang=nextLang;
   data=newData;
+  applyStaticTranslations();
 
   localStorage.setItem('learndns-language',lang);
-  document.documentElement.lang=lang;
-  document.title=lang==='en'
-    ?'LearnDNS · DNS Technical Documentation'
-    :'LearnDNS · Documentación técnica de DNS';
 
-  if(input)input.placeholder=t('searchPlaceholder');
 
   const selector=$('#languageSwitch');
   if(selector)selector.value=lang;
 
+  applyStaticTranslations();
   renderNav();
   renderHome();
 
