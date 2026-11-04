@@ -137,115 +137,223 @@ footerLibrary:'Technical reference library'
 
 const t=key=>ui[lang][key]||key;
 function applyStaticTranslations(){
-  const set=(selector,value)=>{
+  const en=lang==='en';
+
+  const text=(selector,value)=>{
     const el=$(selector);
-    if(el&&value!==undefined)el.textContent=value;
+    if(el)el.textContent=value;
+  };
+
+  const html=(selector,value)=>{
+    const el=$(selector);
+    if(el)el.innerHTML=value;
   };
 
   const attr=(selector,name,value)=>{
     const el=$(selector);
-    if(el&&value!==undefined)el.setAttribute(name,value);
+    if(el)el.setAttribute(name,value);
   };
 
-  attr('#menuBtn','aria-label',t('openNavigation'));
-  attr('.brand','aria-label','LearnDNS, '+t('homeIndex'));
-  attr('#searchInput','aria-label',t('searchPlaceholder'));
-  attr('#clearSearch','aria-label',lang==='en'?'Clear search':'Limpiar búsqueda');
-  attr('#sidebar','aria-label',t('library'));
-  attr('#sideNav','aria-label',lang==='en'?'Documentation sections':'Secciones de documentación');
-  attr('.viz','aria-label',lang==='en'?'DNS hierarchy from root to domain':'Jerarquía DNS desde la raíz hasta un dominio');
-
-  const sideHead=$('.side-head');
-  if(sideHead)sideHead.firstChild.textContent=t('library')+' ';
-
-  const sideHome=$('.side-home');
-  if(sideHome)sideHome.innerHTML=`<span class="home-glyph">⌂</span> ${t('homeIndex')}`;
-
-  set('.side-foot',t('technicalLibrary'));
-  const sideFoot=$('.side-foot');
-  if(sideFoot)sideFoot.innerHTML=`${t('technicalLibrary')}<br><span>DNS · RFC · ${lang==='en'?'OPERATIONS':'OPERACIÓN'}</span>`;
-
-  set('.hero .tag','DOMAIN NAME SYSTEM / DNS');
-
-  const heroTitle=$('.hero h1');
-  if(heroTitle)heroTitle.innerHTML=lang==='en'
-    ?'Understand how the <span>Internet works.</span>'
-    :'Entiende cómo funciona <span>Internet.</span>';
-
-  set('.hero-copy > p',t('heroDescription'));
-
-  const heroButton=$('.hero-copy .button');
-  if(heroButton)heroButton.innerHTML=`${t('exploreDocumentation')} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
-
-  const meta=$$('.hero-meta span');
-  if(meta.length){
-    meta[0].innerHTML=`<i></i> ${data.categories.length} ${t('technicalAreas')}`;
-    if(meta[1])meta[1].textContent=t('freeConsultation');
-  }
-
-  const vizBar=$('.viz-bar span');
-  if(vizBar)vizBar.textContent=lang==='en'?'DNS hierarchy':'jerarquía DNS';
-
-  const cap=$('.viz .cap');
-  if(cap)cap.textContent=t('root');
-
-  const vizCaption=$('.viz-caption');
-  if(vizCaption)vizCaption.innerHTML=`<span>01</span> ${t('hierarchy').replaceAll('→','<b>→</b>')}`;
-
-  set('.topics .eyebrow',t('libraryEyebrow'));
-  set('.topics h2',t('exploreDNS'));
-  set('.topics .section-head p',t('topicsDescription'));
-  set('.path-note',`${data.categories.length} ${t('areasDocumentation')}`);
-
-  const quick=$$('.quick-links .section-head .eyebrow');
-  if(quick.length)quick[0].textContent=t('directAccess');
-
-  set('.quick-links h2',t('essentialReferences'));
-  set('.quick-links .section-head p',t('quickDescription'));
-
-  const links=$$('.quick-grid a');
-  if(links.length){
-    links[0].innerHTML=`${t('glossary')} <span>↗</span>`;
-    links[1].innerHTML=`${t('recordTypes')} <span>↗</span>`;
-    links[2].innerHTML=`${t('toolsCommands')} <span>↗</span>`;
-  }
-
-  set('#searchView .crumb',t('globalSearch'));
-  set('#searchView .eyebrow',t('searchResults'));
-  set('#searchView h1',t('searchTitle'));
-
-  set('.toc-title',t('pageToc'));
-  const related=$('.toc-related .eyebrow');
-  if(related)related.textContent=t('quickConsultation');
-
-  const tocLinks=$$('.toc-related a');
-  if(tocLinks.length){
-    tocLinks[0].innerHTML=`${t('glossary')} <b>→</b>`;
-    tocLinks[1].innerHTML=`${lang==='en'?'DNS tools':'Herramientas DNS'} <b>→</b>`;
-    tocLinks[2].innerHTML=`${t('allAreas')} <b>→</b>`;
-  }
-
-  set('.footer-brand p',t('footerDescription'));
-
-  const footerLinks=$$('.foot-links a');
-  if(footerLinks.length){
-    footerLinks[0].textContent=t('home');
-    footerLinks[1].textContent=t('topics');
-    footerLinks[2].textContent=t('glossary');
-  }
-
-  const copy=$('.copy');
-  if(copy)copy.innerHTML=`learndns.lat <span>·</span> ${t('footerLibrary')}`;
-
+  // DOCUMENT TITLE AND LANGUAGE
   document.documentElement.lang=lang;
-  document.title=lang==='en'
+
+  document.title=en
     ?'LearnDNS · DNS Technical Documentation'
     :'LearnDNS · Documentación técnica de DNS';
 
   const description=$('meta[name="description"]');
-  if(description)description.content=lang==='en'
-    ?'LearnDNS: technical library for understanding domains, zones, records, servers, DNS resolution and security.'
-    :'LearnDNS: biblioteca técnica para comprender dominios, zonas, registros, servidores, resolución y seguridad DNS.';
+
+  if(description){
+    description.content=en
+      ?'LearnDNS: technical library for understanding domains, zones, records, servers, resolution and DNS security.'
+      :'LearnDNS: biblioteca técnica para comprender dominios, zonas, registros, servidores, resolución y seguridad DNS.';
+  }
+
+  // HEADER
+  attr('#menuBtn','aria-label',en?'Open navigation':'Abrir navegación');
+  attr('.brand','aria-label',en?'LearnDNS, home':'LearnDNS, inicio');
+  attr('#searchInput','aria-label',en?'Search all documentation':'Buscar en toda la documentación');
+  attr('#clearSearch','aria-label',en?'Clear search':'Limpiar búsqueda');
+  attr('#languageSwitch','aria-label',en?'Language':'Idioma');
+
+  if(input){
+    input.placeholder=en
+      ?'Search concepts, records, commands…'
+      :'Buscar conceptos, registros, comandos…';
+  }
+
+  html('.practice-link',en?'PRACTICE ↗':'PRÁCTICA ↗');
+
+  const glossaryHeader=$('header .top-link:not(.practice-link)');
+
+  if(glossaryHeader){
+    glossaryHeader.innerHTML=en
+      ?'Glossary <span>↗</span>'
+      :'Glosario <span>↗</span>';
+  }
+
+  const brandSmall=$('.topbar .brand small');
+
+  if(brandSmall){
+    brandSmall.textContent=en
+      ?'TECHNICAL DOCUMENTATION'
+      :'DOCUMENTACIÓN TÉCNICA';
+  }
+
+  // SIDEBAR
+  const sideHead=$('.side-head');
+
+  if(sideHead){
+    const count=$('#articleCount');
+    sideHead.firstChild.textContent=en?'LIBRARY ':'BIBLIOTECA ';
+    if(count)sideHead.appendChild(count);
+  }
+
+  html('.side-home',
+    `<span class="home-glyph">⌂</span> ${en?'Home / index':'Inicio / índice'}`
+  );
+
+  attr('#sidebar','aria-label',en?'Documentation navigation':'Navegación de documentación');
+  attr('#sideNav','aria-label',en?'Documentation sections':'Secciones de documentación');
+
+  html('.side-foot',en
+    ?'TECHNICAL REFERENCE<br><span>DNS · RFC · OPERATIONS</span>'
+    :'REFERENCIA TÉCNICA<br><span>DNS · RFC · OPERACIÓN</span>'
+  );
+
+  // HERO
+  text('.hero h1',en?'Understand how the Internet works.':'Entiende cómo funciona Internet.');
+
+  html('.hero h1',en
+    ?'Understand how <span>the Internet works.</span>'
+    :'Entiende cómo funciona <span>Internet.</span>'
+  );
+
+  text('.hero-copy > p',en
+    ?'A technical library to explore how domains become IP addresses, how zones are organized, and how servers find the information we need.'
+    :'Una biblioteca técnica para consultar cómo los dominios se convierten en direcciones IP, cómo se organizan las zonas y cómo los servidores encuentran la información que necesitamos.'
+  );
+
+  const heroButton=$('.hero-copy .button');
+
+  if(heroButton){
+    heroButton.innerHTML=en
+      ?'Explore documentation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+      :'Explorar documentación <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  }
+
+  const meta=$$('.hero-meta span');
+
+  if(meta[0]){
+    meta[0].innerHTML=`<i></i> ${data.categories.length} ${en?'technical areas':'áreas técnicas'}`;
+  }
+
+  if(meta[1]){
+    meta[1].textContent=en
+      ?'Open reference · No required learning path'
+      :'Consulta libre · Sin recorrido obligatorio';
+  }
+
+  // DNS DIAGRAM
+  attr('.viz','aria-label',en
+    ?'DNS hierarchy from root to domain'
+    :'Jerarquía DNS desde la raíz hasta un dominio'
+  );
+
+  text('.viz-bar span',en?'DNS hierarchy':'jerarquía DNS');
+  text('.viz .cap',en?'Root':'Raíz');
+
+  html('.viz-caption',en
+    ?'<span>01</span> ROOT <b>→</b> TLD <b>→</b> DOMAIN'
+    :'<span>01</span> RAÍZ <b>→</b> TLD <b>→</b> DOMINIO'
+  );
+
+  // TOPICS
+  text('.topics .eyebrow',en?'REFERENCE LIBRARY':'BIBLIOTECA DE CONSULTA');
+  text('.topics h2',en?'Explore DNS':'Explora el DNS');
+
+  text('.topics .section-head p',en
+    ?'Find the topic you need and explore how it works through examples and technical references.'
+    :'Encuentra el tema que necesitas y consulta cómo funciona, con ejemplos y referencias técnicas.'
+  );
+
+  text('.path-note',en
+    ?`${data.categories.length} AREAS · TECHNICAL DOCUMENTATION`
+    :`${data.categories.length} ÁREAS · DOCUMENTACIÓN TÉCNICA`
+  );
+
+  // QUICK LINKS
+  text('.quick-links .eyebrow',en?'QUICK ACCESS':'ACCESO DIRECTO');
+  text('.quick-links h2',en?'Essential references':'Referencias esenciales');
+
+  text('.quick-links .section-head p',en
+    ?'Shortcuts to frequently used reference resources.'
+    :'Atajos a recursos de consulta frecuente.'
+  );
+
+  const quickLinks=$$('.quick-grid a');
+
+  const quickLabels=en
+    ?['DNS Glossary','Record types','Commands and tools']
+    :['Glosario DNS','Tipos de registros','Comandos y herramientas'];
+
+  quickLinks.forEach((link,i)=>{
+    if(quickLabels[i]){
+      link.innerHTML=`${quickLabels[i]} <span>↗</span>`;
+    }
+  });
+
+  // SEARCH VIEW
+  text('#searchView .crumb',en?'LIBRARY / GLOBAL SEARCH':'BIBLIOTECA / BÚSQUEDA GLOBAL');
+  text('#searchView .eyebrow',en?'RESULTS':'RESULTADOS');
+  text('#searchView h1',en?'Search LearnDNS':'Buscar en LearnDNS');
+
+  // TABLE OF CONTENTS
+  text('.toc-title',en?'ON THIS PAGE':'EN ESTA PÁGINA');
+
+  attr('#toc','aria-label',en?'Page navigation':'Navegación de página');
+
+  const tocRelated=$('.toc-related .eyebrow');
+
+  if(tocRelated){
+    tocRelated.textContent=en?'QUICK REFERENCE':'CONSULTA RÁPIDA';
+  }
+
+  const tocLinks=$$('.toc-related a');
+
+  const tocLabels=en
+    ?['DNS Glossary','DNS tools','All areas']
+    :['Glosario DNS','Herramientas DNS','Todas las áreas'];
+
+  tocLinks.forEach((link,i)=>{
+    if(tocLabels[i]){
+      link.innerHTML=`${tocLabels[i]} <b>→</b>`;
+    }
+  });
+
+  // FOOTER
+  text('.footer-brand p',en
+    ?'Technical documentation to understand the Domain Name System.'
+    :'Documentación técnica para comprender el Sistema de Nombres de Dominio.'
+  );
+
+  const footerLinks=$$('.foot-links a');
+
+  const footerLabels=en
+    ?['Home','Topics','Glossary','RFC Editor ↗']
+    :['Inicio','Temas','Glosario','RFC Editor ↗'];
+
+  footerLinks.forEach((link,i)=>{
+    if(footerLabels[i])link.textContent=footerLabels[i];
+  });
+
+  const copy=$('.copy');
+
+  if(copy){
+    copy.innerHTML=en
+      ?'learndns.lat <span>·</span> Technical reference library'
+      :'learndns.lat <span>·</span> Biblioteca técnica de consulta';
+  }
 }
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
